@@ -1,0 +1,57 @@
+# ============================================================
+# EduMind AI — Python Dependencies
+# Author: Mamani Kedarnath
+# Description: All backend dependencies for RAG, LangGraph,
+#              Fine-Tuning, and FastAPI serving engine.
+# ============================================================
+numpy==1.26.4
+# --- Web Framework ---
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+
+# --- Environment & Config ---
+python-dotenv==1.0.1
+
+# --- LangChain Ecosystem ---
+langchain==0.3.7
+langchain-community==0.3.7
+langchain-core==0.3.17
+langchain-groq==0.2.1
+langgraph==0.2.45
+
+# --- Vector Database ---
+chromadb==0.5.18
+
+# --- Embeddings ---
+sentence-transformers==3.2.1
+
+# --- Document Loaders ---
+pypdf==5.1.0
+python-docx==1.1.2
+unstructured==0.16.19
+
+# --- Database ---
+sqlalchemy==2.0.35
+aiosqlite==0.20.0
+
+# --- Authentication ---
+authlib==1.3.2
+httpx==0.27.2
+itsdangerous==2.2.0
+
+# --- Fine-Tuning ---
+transformers==4.46.2
+datasets==3.1.0
+peft==0.13.2
+trl==0.12.0
+accelerate==1.1.1
+bitsandbytes==0.44.1
+
+# --- Evaluation ---
+ragas==0.2.6
+
+# --- Utilities ---
+pydantic==2.9.2
+tenacity==9.0.0
+tqdm==4.67.0
