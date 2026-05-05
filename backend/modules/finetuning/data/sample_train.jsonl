@@ -1,0 +1,10 @@
+{"text": "Q: What is photosynthesis? A: Photosynthesis is the process by which plants use sunlight, water, and carbon dioxide to produce oxygen and energy in the form of glucose."}
+{"text": "Q: What is Newton's first law? A: An object at rest stays at rest and an object in motion stays in motion unless acted upon by an external force."}
+{"text": "Q: What is the Pythagorean theorem? A: In a right triangle, the square of the hypotenuse equals the sum of squares of the other two sides: a² + b² = c²."}
+{"text": "Q: What is mitosis? A: Mitosis is a type of cell division resulting in two daughter cells with the same number of chromosomes as the parent cell."}
+{"text": "Q: What is Ohm's law? A: Ohm's law states that voltage equals current multiplied by resistance: V = IR."}
+{"prompt": "Explain gravity", "chosen": "Gravity is a fundamental force that attracts objects with mass toward each other. On Earth it gives weight to objects.", "rejected": "Gravity is just something that makes things fall down."}
+{"prompt": "What is DNA?", "chosen": "DNA (Deoxyribonucleic acid) is a molecule that carries genetic instructions for the development and functioning of all living organisms.", "rejected": "DNA is stuff inside your body."}
+{"query": "What is the speed of light?"}
+{"query": "Explain the water cycle."}
+{"query": "What is the periodic table?"}
