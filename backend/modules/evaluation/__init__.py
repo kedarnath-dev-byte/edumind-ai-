@@ -5,7 +5,7 @@
 @author    EduMind AI Engineering
 """
 
-from backend.modules.evaluation.models import (
+from modules.evaluation.models import (
     StudentSession,
     DocumentHistory,
     QuestionHistory,
@@ -20,3 +20,4 @@ __all__ = [
     "RAGEvaluation",
     "APIMetric",
 ]
+

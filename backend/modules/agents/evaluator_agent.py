@@ -6,7 +6,7 @@ Inherits from BaseAgent. Used as a LangGraph node in the evaluation subgraph.
 """
 
 from typing import Any, Dict
-from backend.modules.agents.base_agent import BaseAgent
+from modules.agents.base_agent import BaseAgent
 
 
 class EvaluatorAgent(BaseAgent):
@@ -56,3 +56,4 @@ class EvaluatorAgent(BaseAgent):
         except Exception as e:
             state["error"] = str(e)
             return state
+

@@ -38,3 +38,4 @@ class BaseServer(ABC):
             "is_loaded": self.is_loaded,
             "server_type": self.__class__.__name__,
         }
+

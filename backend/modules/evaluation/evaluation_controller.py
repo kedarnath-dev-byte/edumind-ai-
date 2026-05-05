@@ -12,8 +12,8 @@ from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy.orm import Session
 
-from backend.core.database import get_db
-from backend.modules.evaluation.evaluation_service import EvaluationService
+from core.database import get_db
+from modules.evaluation.evaluation_service import EvaluationService
 
 router = APIRouter(prefix="/api/v1/evaluation", tags=["Evaluation & Monitoring"])
 
@@ -185,8 +185,9 @@ async def log_api_metric(request: APIMetricRequest, db: Session = Depends(get_db
 async def get_system_health(db: Session = Depends(get_db)):
     """Quick system health check — total students, sessions, docs, questions."""
     try:
-        from backend.modules.evaluation.evaluation_repository import EvaluationRepository
+        from modules.evaluation.evaluation_repository import EvaluationRepository
         repo = EvaluationRepository(db)
         return repo.get_system_health()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

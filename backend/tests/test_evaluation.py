@@ -11,13 +11,13 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from backend.core.database import Base
-from backend.modules.evaluation.models import (
+from core.database import Base
+from modules.evaluation.models import (
     StudentSession, DocumentHistory, QuestionHistory,
     RAGEvaluation, APIMetric,
 )
-from backend.modules.evaluation.evaluation_repository import EvaluationRepository
-from backend.modules.evaluation.evaluation_service import EvaluationService
+from modules.evaluation.evaluation_repository import EvaluationRepository
+from modules.evaluation.evaluation_service import EvaluationService
 
 
 # ─── Test Database Setup ──────────────────────────────────────────────────────
@@ -208,3 +208,4 @@ def test_log_api_metric(service):
     )
     assert result["logged"] is True
     assert "metric_id" in result
+

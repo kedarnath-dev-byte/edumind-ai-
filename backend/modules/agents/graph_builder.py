@@ -8,11 +8,11 @@ using conditional edges based on state['next_agent'].
 
 from langgraph.graph import StateGraph, END
 
-from backend.modules.agents.agent_state import AgentState
-from backend.modules.agents.router_agent import RouterAgent
-from backend.modules.agents.tutor_agent import TutorAgent
-from backend.modules.agents.quiz_agent import QuizAgent
-from backend.modules.agents.evaluator_agent import EvaluatorAgent
+from modules.agents.agent_state import AgentState
+from modules.agents.router_agent import RouterAgent
+from modules.agents.tutor_agent import TutorAgent
+from modules.agents.quiz_agent import QuizAgent
+from modules.agents.evaluator_agent import EvaluatorAgent
 
 
 def route_decision(state: AgentState) -> str:
@@ -58,3 +58,4 @@ def build_graph() -> StateGraph:
     graph.add_edge("EvaluatorAgent", END)
 
     return graph.compile()
+

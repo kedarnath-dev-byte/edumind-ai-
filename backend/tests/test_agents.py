@@ -6,12 +6,12 @@ Covers RouterAgent, TutorAgent, QuizAgent, EvaluatorAgent, and graph_builder.
 """
 
 import pytest
-from backend.modules.agents.agent_state import AgentState
-from backend.modules.agents.router_agent import RouterAgent
-from backend.modules.agents.tutor_agent import TutorAgent
-from backend.modules.agents.quiz_agent import QuizAgent
-from backend.modules.agents.evaluator_agent import EvaluatorAgent
-from backend.modules.agents.graph_builder import build_graph
+from modules.agents.agent_state import AgentState
+from modules.agents.router_agent import RouterAgent
+from modules.agents.tutor_agent import TutorAgent
+from modules.agents.quiz_agent import QuizAgent
+from modules.agents.evaluator_agent import EvaluatorAgent
+from modules.agents.graph_builder import build_graph
 
 
 # ── RouterAgent tests ──────────────────────────────────────────────
@@ -140,3 +140,4 @@ def test_graph_routes_to_quiz():
     result = graph.invoke({"question": "give me a test on gravity"})
     assert result["next_agent"] == "QuizAgent"
     assert "quiz_prompt" in result
+

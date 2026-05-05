@@ -6,7 +6,7 @@ Inherits from BaseAgent. Used as a LangGraph node in the tutor subgraph.
 """
 
 from typing import Any, Dict
-from backend.modules.agents.base_agent import BaseAgent
+from modules.agents.base_agent import BaseAgent
 
 
 class TutorAgent(BaseAgent):
@@ -51,3 +51,4 @@ class TutorAgent(BaseAgent):
         except Exception as e:
             state["error"] = str(e)
             return state
+

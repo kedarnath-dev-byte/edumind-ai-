@@ -61,7 +61,7 @@ def get_settings() -> Settings:
     """
     Returns cached Settings instance.
     lru_cache ensures .env is read only ONCE at startup — not on every request.
-    Usage: from backend.core.config import get_settings
+    Usage: from core.config import get_settings
            settings = get_settings()
     """
     return Settings()
@@ -69,3 +69,4 @@ def get_settings() -> Settings:
 
 # Convenience instance for direct imports
 settings = get_settings()
+

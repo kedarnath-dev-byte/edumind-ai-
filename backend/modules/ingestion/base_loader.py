@@ -51,3 +51,4 @@ class BaseDocumentLoader(ABC):
     def get_loader_name(self) -> str:
         """Returns the name of the loader for logging."""
         return self.__class__.__name__
+

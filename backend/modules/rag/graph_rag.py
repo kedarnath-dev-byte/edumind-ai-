@@ -231,3 +231,4 @@ Answer:"""
 
         except Exception as e:
             raise RuntimeError(f"[GraphRAG] generate() failed: {str(e)}")
+

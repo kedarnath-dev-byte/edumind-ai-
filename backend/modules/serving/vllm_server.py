@@ -11,7 +11,7 @@
 """
 
 from typing import Any, Dict
-from backend.modules.serving.base_server import BaseServer
+from modules.serving.base_server import BaseServer
 
 
 class VLLMServer(BaseServer):
@@ -75,3 +75,4 @@ class VLLMServer(BaseServer):
             }
         except Exception as e:
             raise RuntimeError(f"VLLMServer health_check failed: {e}")
+

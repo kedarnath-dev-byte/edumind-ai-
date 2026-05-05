@@ -150,3 +150,4 @@ Answer:"""
 
         except Exception as e:
             raise RuntimeError(f"[EnsembleRAG] generate() failed: {str(e)}")
+

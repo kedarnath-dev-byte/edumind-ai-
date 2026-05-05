@@ -196,3 +196,4 @@ Answer:"""
 
         except Exception as e:
             raise RuntimeError(f"[SelfQueryRAG] generate() failed: {str(e)}")
+

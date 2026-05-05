@@ -153,3 +153,4 @@ Answer:"""
 
         except Exception as e:
             raise RuntimeError(f"[HybridRAG] generate() failed: {str(e)}")
+

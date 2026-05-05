@@ -7,7 +7,7 @@ Uses keyword matching strategy (upgradeable to LLM-based routing later).
 """
 
 from typing import Any, Dict
-from backend.modules.agents.base_agent import BaseAgent
+from modules.agents.base_agent import BaseAgent
 
 
 class RouterAgent(BaseAgent):
@@ -53,3 +53,4 @@ class RouterAgent(BaseAgent):
             state["error"] = str(e)
             state["next_agent"] = "TutorAgent"
             return state
+

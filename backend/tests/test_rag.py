@@ -8,7 +8,7 @@
 
 import pytest
 from unittest.mock import MagicMock, patch
-from backend.modules.rag import NaiveRAG, HybridRAG, ContextualRAG, SelfQueryRAG, ParentDocumentRAG, EnsembleRAG, AdaptiveRAG, GraphRAG, MultiQueryRAG, StepBackRAG, RaptorRAG, CorrectiveRAG, SpeculativeRAG, FusionRAG, SentenceWindowRAG, ReRankRAG, RAGQuery, RAGResult
+from modules.rag import NaiveRAG, HybridRAG, ContextualRAG, SelfQueryRAG, ParentDocumentRAG, EnsembleRAG, AdaptiveRAG, GraphRAG, MultiQueryRAG, StepBackRAG, RaptorRAG, CorrectiveRAG, SpeculativeRAG, FusionRAG, SentenceWindowRAG, ReRankRAG, RAGQuery, RAGResult
 
 class TestNaiveRAG:
     """Tests for NaiveRAG pipeline."""
@@ -1662,4 +1662,5 @@ class TestReRankRAG:
         # Must have requested 5 * 3 = 15 candidates
         call_args = mock_collection.query.call_args
         assert call_args[1]["n_results"] == 15
+
 

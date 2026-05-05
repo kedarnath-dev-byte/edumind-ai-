@@ -138,3 +138,4 @@ Answer:"""
             return response.choices[0].message.content
         except Exception as e:
             raise RuntimeError(f"[SpeculativeRAG] generate() failed: {str(e)}")
+

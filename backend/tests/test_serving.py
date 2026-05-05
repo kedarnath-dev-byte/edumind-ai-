@@ -8,12 +8,12 @@
 """
 
 import pytest
-from backend.modules.serving.fastapi_server import FastAPIServer
-from backend.modules.serving.torchserve_server import TorchServeServer
-from backend.modules.serving.triton_server import TritonServer
-from backend.modules.serving.bentoml_server import BentoMLServer
-from backend.modules.serving.vllm_server import VLLMServer
-from backend.modules.serving.serving_factory import ServingFactory
+from modules.serving.fastapi_server import FastAPIServer
+from modules.serving.torchserve_server import TorchServeServer
+from modules.serving.triton_server import TritonServer
+from modules.serving.bentoml_server import BentoMLServer
+from modules.serving.vllm_server import VLLMServer
+from modules.serving.serving_factory import ServingFactory
 
 
 # ─────────────────────────────────────
@@ -239,3 +239,4 @@ class TestServingFactory:
         assert "triton" in engines
         assert "bentoml" in engines
         assert "vllm" in engines
+

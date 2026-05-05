@@ -55,7 +55,7 @@ def init_db():
     Safe to call multiple times — skips existing tables.
     """
     # Import all models here so Base knows about them before create_all()
-    from backend.modules.evaluation.models import (  # noqa: F401
+    from modules.evaluation.models import (  # noqa: F401
         StudentSession,
         DocumentHistory,
         QuestionHistory,
@@ -63,3 +63,4 @@ def init_db():
         APIMetric,
     )
     Base.metadata.create_all(bind=engine)
+

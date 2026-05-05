@@ -9,8 +9,8 @@
 import os
 import pytest
 
-from backend.modules.ingestion.ingestion_service import IngestionService
-from backend.modules.ingestion.loader_factory import LoaderFactory
+from modules.ingestion.ingestion_service import IngestionService
+from modules.ingestion.loader_factory import LoaderFactory
 
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
@@ -39,9 +39,9 @@ def sample_txt_file(tmp_path):
 
 def test_factory_returns_correct_loader():
     """Factory must return correct loader for each extension."""
-    from backend.modules.ingestion.txt_loader import TXTLoader
-    from backend.modules.ingestion.pdf_loader import PDFLoader
-    from backend.modules.ingestion.docx_loader import DOCXLoader
+    from modules.ingestion.txt_loader import TXTLoader
+    from modules.ingestion.pdf_loader import PDFLoader
+    from modules.ingestion.docx_loader import DOCXLoader
 
     assert isinstance(LoaderFactory.get_loader("notes.txt"),  TXTLoader)
     assert isinstance(LoaderFactory.get_loader("notes.pdf"),  PDFLoader)
@@ -83,3 +83,4 @@ def test_supported_types():
     assert ".pdf"  in types
     assert ".txt"  in types
     assert ".docx" in types
+

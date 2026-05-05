@@ -10,8 +10,8 @@
 import os
 from typing import List
 
-from backend.modules.ingestion.base_loader import DocumentChunk
-from backend.modules.ingestion.loader_factory import LoaderFactory
+from modules.ingestion.base_loader import DocumentChunk
+from modules.ingestion.loader_factory import LoaderFactory
 
 
 class IngestionService:
@@ -77,3 +77,4 @@ class IngestionService:
     def get_supported_types(self) -> list:
         """Returns supported file extensions — used by API for validation."""
         return LoaderFactory.get_supported_types()
+

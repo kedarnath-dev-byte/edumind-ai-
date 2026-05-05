@@ -198,3 +198,4 @@ Answer:"""
             return response.choices[0].message.content
         except Exception as e:
             raise RuntimeError(f"[FusionRAG] generate() failed: {str(e)}")
+

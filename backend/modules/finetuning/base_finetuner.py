@@ -42,3 +42,4 @@ class BaseFineTuner(ABC):
             "config": self.config,
             "model_loaded": self.model is not None,
         }
+

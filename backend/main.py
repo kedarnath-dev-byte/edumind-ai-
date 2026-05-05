@@ -50,3 +50,4 @@ async def on_startup():
 async def root():
     """Quick health check endpoint."""
     return {"status": "ok", "app": "EduMind AI", "version": "1.0.0"}
+

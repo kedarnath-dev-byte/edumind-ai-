@@ -75,3 +75,4 @@ class BaseRAG(ABC):
             rag_type=self.rag_type,
             metadata={"query": query.query_text, "top_k": query.top_k}
         )
+

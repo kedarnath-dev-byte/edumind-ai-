@@ -103,3 +103,4 @@ Answer:"""
 
         except Exception as e:
             raise RuntimeError(f"[NaiveRAG] generate() failed: {str(e)}")
+

@@ -73,3 +73,4 @@ class LoRAFineTuner(BaseFineTuner):
             "total_params": total,
             "trainable_percent": round(100 * trainable / total, 2),
         }
+

@@ -199,3 +199,4 @@ Answer:"""
     def clear_history(self) -> None:
         """Clear conversation history — call this when a new session starts."""
         self._history = []
+

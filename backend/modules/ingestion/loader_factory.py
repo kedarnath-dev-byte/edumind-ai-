@@ -7,10 +7,10 @@
 @author   EduMind AI Engineering
 """
 
-from backend.modules.ingestion.base_loader import BaseDocumentLoader
-from backend.modules.ingestion.pdf_loader import PDFLoader
-from backend.modules.ingestion.txt_loader import TXTLoader
-from backend.modules.ingestion.docx_loader import DOCXLoader
+from modules.ingestion.base_loader import BaseDocumentLoader
+from modules.ingestion.pdf_loader import PDFLoader
+from modules.ingestion.txt_loader import TXTLoader
+from modules.ingestion.docx_loader import DOCXLoader
 
 
 class LoaderFactory:
@@ -50,3 +50,4 @@ class LoaderFactory:
     def get_supported_types() -> list:
         """Returns list of all supported file extensions."""
         return list(LoaderFactory._REGISTRY.keys())
+

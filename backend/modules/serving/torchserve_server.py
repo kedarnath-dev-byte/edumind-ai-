@@ -9,7 +9,7 @@
 """
 
 from typing import Any, Dict
-from backend.modules.serving.base_server import BaseServer
+from modules.serving.base_server import BaseServer
 
 
 class TorchServeServer(BaseServer):
@@ -63,3 +63,4 @@ class TorchServeServer(BaseServer):
             }
         except Exception as e:
             raise RuntimeError(f"TorchServeServer health_check failed: {e}")
+

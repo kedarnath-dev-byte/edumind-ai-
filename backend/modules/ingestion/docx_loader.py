@@ -11,7 +11,7 @@ from typing import List
 
 from docx import Document
 
-from backend.modules.ingestion.base_loader import BaseDocumentLoader, DocumentChunk
+from modules.ingestion.base_loader import BaseDocumentLoader, DocumentChunk
 
 
 class DOCXLoader(BaseDocumentLoader):
@@ -95,3 +95,4 @@ class DOCXLoader(BaseDocumentLoader):
             start += self.chunk_size - self.chunk_overlap
 
         return chunks
+

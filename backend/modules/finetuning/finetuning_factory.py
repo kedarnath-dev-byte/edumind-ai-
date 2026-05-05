@@ -72,3 +72,4 @@ class FineTunerFactory:
     def list_frameworks() -> list:
         """Returns a list of all available fine-tuning framework names."""
         return list(FINETUNER_REGISTRY.keys())
+

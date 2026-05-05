@@ -8,7 +8,7 @@
 
 import pytest
 import os
-from backend.modules.finetuning.finetuning_factory import FineTunerFactory
+from modules.finetuning.finetuning_factory import FineTunerFactory
 
 # Path to sample training data
 DATA_PATH = os.path.join(
@@ -47,7 +47,7 @@ class TestFineTunerFactory:
             FineTunerFactory.get("invalid_framework", BASE_CONFIG)
 
     def test_factory_returns_correct_type(self):
-        from backend.modules.finetuning.base_finetuner import BaseFineTuner
+        from modules.finetuning.base_finetuner import BaseFineTuner
         tuner = FineTunerFactory.get("sft", BASE_CONFIG)
         assert isinstance(tuner, BaseFineTuner)
 
@@ -115,3 +115,4 @@ class TestDatasetLoading:
         tuner = FineTunerFactory.get("peft", BASE_CONFIG)
         dataset = tuner.prepare_dataset(DATA_PATH)
         assert len(dataset) > 0
+

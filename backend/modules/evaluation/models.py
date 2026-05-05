@@ -8,7 +8,7 @@
 
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, DateTime, Text, Boolean
-from backend.core.database import Base
+from core.database import Base
 
 
 class StudentSession(Base):
@@ -78,3 +78,4 @@ class APIMetric(Base):
     student_email = Column(String, nullable=True)
     called_at = Column(DateTime, default=datetime.utcnow)
     error_message = Column(Text, nullable=True)
+

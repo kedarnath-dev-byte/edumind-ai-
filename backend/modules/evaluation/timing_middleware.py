@@ -11,7 +11,7 @@ import time
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
-from backend.core.database import SessionLocal
+from core.database import SessionLocal
 
 
 class TimingMiddleware(BaseHTTPMiddleware):
@@ -43,7 +43,7 @@ class TimingMiddleware(BaseHTTPMiddleware):
             if endpoint not in skip_paths:
                 try:
                     db = SessionLocal()
-                    from backend.modules.evaluation.evaluation_repository import EvaluationRepository
+                    from modules.evaluation.evaluation_repository import EvaluationRepository
                     repo = EvaluationRepository(db)
                     repo.log_api_call(
                         endpoint=endpoint,
@@ -57,3 +57,4 @@ class TimingMiddleware(BaseHTTPMiddleware):
                     pass  # Never crash the app due to logging failure
 
         return response
+

@@ -9,12 +9,12 @@
 """
 
 from typing import Any, Dict
-from backend.modules.serving.base_server import BaseServer
-from backend.modules.serving.fastapi_server import FastAPIServer
-from backend.modules.serving.torchserve_server import TorchServeServer
-from backend.modules.serving.triton_server import TritonServer
-from backend.modules.serving.bentoml_server import BentoMLServer
-from backend.modules.serving.vllm_server import VLLMServer
+from modules.serving.base_server import BaseServer
+from modules.serving.fastapi_server import FastAPIServer
+from modules.serving.torchserve_server import TorchServeServer
+from modules.serving.triton_server import TritonServer
+from modules.serving.bentoml_server import BentoMLServer
+from modules.serving.vllm_server import VLLMServer
 
 
 # Registry of all available serving engines
@@ -79,3 +79,4 @@ class ServingFactory:
             name: cls.__name__
             for name, cls in SERVING_ENGINES.items()
         }
+

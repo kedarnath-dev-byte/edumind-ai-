@@ -104,3 +104,4 @@ class RLHFFineTuner(BaseFineTuner):
             "steps": steps,
             "average_reward": round(total_reward / max(steps, 1), 4),
         }
+

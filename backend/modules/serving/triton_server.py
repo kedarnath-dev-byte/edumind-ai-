@@ -10,7 +10,7 @@
 """
 
 from typing import Any, Dict
-from backend.modules.serving.base_server import BaseServer
+from modules.serving.base_server import BaseServer
 
 
 class TritonServer(BaseServer):
@@ -68,3 +68,4 @@ class TritonServer(BaseServer):
             }
         except Exception as e:
             raise RuntimeError(f"TritonServer health_check failed: {e}")
+

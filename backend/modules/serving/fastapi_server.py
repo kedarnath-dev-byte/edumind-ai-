@@ -8,7 +8,7 @@
 """
 
 from typing import Any, Dict
-from backend.modules.serving.base_server import BaseServer
+from modules.serving.base_server import BaseServer
 
 
 class FastAPIServer(BaseServer):
@@ -58,3 +58,4 @@ class FastAPIServer(BaseServer):
             }
         except Exception as e:
             raise RuntimeError(f"FastAPIServer health_check failed: {e}")
+

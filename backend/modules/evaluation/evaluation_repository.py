@@ -11,7 +11,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, func
 
-from backend.modules.evaluation.models import (
+from modules.evaluation.models import (
     StudentSession,
     DocumentHistory,
     QuestionHistory,
@@ -190,3 +190,4 @@ class EvaluationRepository:
             "total_documents": total_documents,
             "total_questions": total_questions,
         }
+

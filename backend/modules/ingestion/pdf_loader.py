@@ -11,7 +11,7 @@ from typing import List
 
 import fitz  # PyMuPDF
 
-from backend.modules.ingestion.base_loader import BaseDocumentLoader, DocumentChunk
+from modules.ingestion.base_loader import BaseDocumentLoader, DocumentChunk
 
 
 class PDFLoader(BaseDocumentLoader):
@@ -85,3 +85,4 @@ class PDFLoader(BaseDocumentLoader):
             start += self.chunk_size - self.chunk_overlap
 
         return chunks
+

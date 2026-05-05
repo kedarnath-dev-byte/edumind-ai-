@@ -10,7 +10,7 @@
 """
 
 from typing import Any, Dict
-from backend.modules.serving.base_server import BaseServer
+from modules.serving.base_server import BaseServer
 
 
 class BentoMLServer(BaseServer):
@@ -67,3 +67,4 @@ class BentoMLServer(BaseServer):
             }
         except Exception as e:
             raise RuntimeError(f"BentoMLServer health_check failed: {e}")
+

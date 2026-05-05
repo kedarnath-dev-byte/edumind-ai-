@@ -161,3 +161,4 @@ Answer:"""
             return response.choices[0].message.content
         except Exception as e:
             raise RuntimeError(f"[SentenceWindowRAG] generate() failed: {str(e)}")
+

@@ -174,3 +174,4 @@ Reply with ONLY one word — the category name:"""
                 "routed_to": self._selected_rag_type
             }
         )
+

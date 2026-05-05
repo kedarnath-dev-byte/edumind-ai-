@@ -75,3 +75,4 @@ class DPOFineTuner(BaseFineTuner):
             "steps": result.global_step,
             "beta": self.config.get("dpo_beta", 0.1),
         }
+

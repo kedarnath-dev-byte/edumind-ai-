@@ -210,3 +210,4 @@ Answer:"""
 
         except Exception as e:
             raise RuntimeError(f"[RaptorRAG] generate() failed: {str(e)}")
+

@@ -11,7 +11,7 @@ import random
 from typing import Optional
 from sqlalchemy.orm import Session
 
-from backend.modules.evaluation.evaluation_repository import EvaluationRepository
+from modules.evaluation.evaluation_repository import EvaluationRepository
 
 
 class EvaluationService:
@@ -230,3 +230,4 @@ class EvaluationService:
             return {"metric_id": metric.id, "logged": True}
         except Exception as e:
             return {"error": str(e)}
+

@@ -30,3 +30,4 @@ class BaseAgent(ABC):
 
     def __repr__(self) -> str:
         return f"<Agent name={self.name}>"
+
