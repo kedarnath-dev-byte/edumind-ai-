@@ -1,0 +1,46 @@
+# .github/workflows/ci.yml
+# CI/CD pipeline for EduMind AI.
+# Runs on every push and pull request to main.
+# Installs dependencies, runs all backend tests, and reports results.
+
+name: EduMind AI — CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run all tests
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          SECRET_KEY: "ci-test-secret-key"
+          ENVIRONMENT: "test"
+        run: pytest tests/ -v --tb=short
+
+  deploy-notification:
+    needs: test-backend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Notify deployment ready
+        run: echo "✅ All tests passed — Render will auto-deploy now"

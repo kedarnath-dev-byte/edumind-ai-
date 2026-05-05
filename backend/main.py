@@ -9,10 +9,11 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from modules.health.health_controller import router as health_router
 
-from backend.core.database import init_db
-from backend.modules.evaluation.evaluation_controller import router as evaluation_router
-from backend.modules.evaluation.timing_middleware import TimingMiddleware
+from core.database import init_db
+from modules.evaluation.evaluation_controller import router as evaluation_router
+from modules.evaluation.timing_middleware import TimingMiddleware
 
 # ─── App Instance ─────────────────────────────────────────────────────────────
 app = FastAPI(
@@ -35,7 +36,7 @@ app.add_middleware(TimingMiddleware)
 
 # ─── Routers ──────────────────────────────────────────────────────────────────
 app.include_router(evaluation_router)
-
+app.include_router(health_router, prefix="/api/v1", tags=["Health"])
 # ─── Startup Event ────────────────────────────────────────────────────────────
 @app.on_event("startup")
 async def on_startup():
