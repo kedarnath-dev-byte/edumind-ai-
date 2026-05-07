@@ -1,7 +1,7 @@
 ﻿"""
 @module    ingestion_controller
 @description FastAPI router for document ingestion endpoints.
-             Handles file upload, document listing, and deletion.
+             Handles file upload and document listing.
              Follows Repository -> Service -> Controller pattern.
 @author    EduMind AI Engineering
 """
@@ -13,6 +13,9 @@ from modules.ingestion.ingestion_service import IngestionService
 router = APIRouter()
 service = IngestionService()
 
+# In-memory document list (resets on server restart - OK for demo)
+ingested_docs = []
+
 @router.post("/ingestion/upload")
 async def upload_document(file: UploadFile = File(...)):
     """Upload and ingest a document (PDF, DOCX, TXT)."""
@@ -21,9 +24,14 @@ async def upload_document(file: UploadFile = File(...)):
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
             shutil.copyfileobj(file.file, tmp)
             tmp_path = tmp.name
-        result = service.ingest_document(tmp_path, file.filename)
+        result = service.ingest(tmp_path)
         os.unlink(tmp_path)
-        return JSONResponse({"success": True, "message": f"Ingested {file.filename}", "chunks": result})
+        ingested_docs.append({
+            "filename": file.filename,
+            "chunks": result.get("chunks", 0),
+            "status": "success"
+        })
+        return JSONResponse({"success": True, "message": f"Ingested {file.filename}", "result": result})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -31,7 +39,6 @@ async def upload_document(file: UploadFile = File(...)):
 async def get_documents():
     """Get list of all ingested documents."""
     try:
-        docs = service.list_documents()
-        return JSONResponse({"documents": docs})
+        return JSONResponse({"documents": ingested_docs})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
