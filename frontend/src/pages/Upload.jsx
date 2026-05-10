@@ -54,7 +54,7 @@ const Upload = () => {
   const fetchDocuments = async () => {
     try {
       const docs = await uploadService.getDocuments()
-      setDocuments(docs || [])
+      setDocuments(docs?.documents || docs || [])
     } catch (err) {
       console.error('Failed to fetch documents:', err)
     }
