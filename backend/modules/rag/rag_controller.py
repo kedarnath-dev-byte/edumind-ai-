@@ -1,4 +1,4 @@
-﻿"""
+"""
 @module    rag_controller
 @description FastAPI router for RAG pipeline endpoints.
              Handles AI queries using Groq Llama-3 directly.
@@ -32,12 +32,12 @@ async def query_rag(request: QueryRequest):
         if not api_key:
             raise HTTPException(status_code=500, detail="GROQ_API_KEY not configured")
         client = Groq(api_key=api_key)
-        system_prompt = f"""You are EduMind AI — an intelligent education assistant.
+        system_prompt = f"""You are EduMind AI � an intelligent education assistant.
 You are using the {request.pipeline_type.upper()} RAG pipeline.
 Answer the student question clearly and educationally.
 If you do not have specific context, answer from your knowledge."""
         completion = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": request.question}
@@ -50,7 +50,7 @@ If you do not have specific context, answer from your knowledge."""
             "answer": answer,
             "pipeline": request.pipeline_type,
             "question": request.question,
-            "model": "llama3-8b-8192"
+            "model": "llama-3.3-70b-versatile"
         })
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -59,4 +59,5 @@ If you do not have specific context, answer from your knowledge."""
 async def get_pipelines():
     """Get list of all available RAG pipelines."""
     return JSONResponse({"pipelines": ALL_PIPELINE_NAMES})
+
 
