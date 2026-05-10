@@ -1,9 +1,7 @@
 """
-@module    rag_controller
-@description FastAPI router for RAG pipeline endpoints.
-             Handles AI queries using Groq Llama-3 directly.
-             Falls back gracefully if ChromaDB has no documents.
-@author    EduMind AI Engineering
+rag_controller.py
+FastAPI router for RAG pipeline endpoints.
+Handles AI queries using Groq Llama-3 directly.
 """
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
@@ -32,10 +30,7 @@ async def query_rag(request: QueryRequest):
         if not api_key:
             raise HTTPException(status_code=500, detail="GROQ_API_KEY not configured")
         client = Groq(api_key=api_key)
-        system_prompt = f"""You are EduMind AI — an intelligent education assistant.
-You are using the {request.pipeline_type.upper()} RAG pipeline.
-Answer the student question clearly and educationally.
-If you do not have specific context, answer from your knowledge."""
+        system_prompt = f"You are EduMind AI, an intelligent education assistant using the {request.pipeline_type.upper()} RAG pipeline. Answer the student question clearly and educationally."
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
@@ -59,5 +54,3 @@ If you do not have specific context, answer from your knowledge."""
 async def get_pipelines():
     """Get list of all available RAG pipelines."""
     return JSONResponse({"pipelines": ALL_PIPELINE_NAMES})
-
-
