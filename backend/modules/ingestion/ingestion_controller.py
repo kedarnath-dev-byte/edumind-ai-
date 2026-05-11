@@ -1,8 +1,8 @@
 """
 @module IngestionController
 @description FastAPI router for document ingestion endpoints.
-             Stores chunks in a shared in-memory store instead of
-             ChromaDB to avoid OOM on Render free tier (512MB limit).
+             Persists chunks to a JSON file on disk so they survive
+             Render free tier memory resets between requests.
              Follows Controller -> Service -> Repository pattern.
 @author      EduMind AI Engineering
 """
@@ -11,16 +11,35 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 import tempfile
 import os
+import json
 
-# Shared in-memory chunk store — imported by rag_controller too
-chunk_store: dict = {}
+# ─── Persistent chunk store path ─────────────────────────────────────────────
+CHUNK_STORE_PATH = "/tmp/edumind_chunks.json"
+
+
+def load_chunk_store() -> dict:
+    """Load chunks from disk. Returns empty dict if file doesn't exist."""
+    try:
+        if os.path.exists(CHUNK_STORE_PATH):
+            with open(CHUNK_STORE_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return {}
+    except Exception:
+        return {}
+
+
+def save_chunk_store(store: dict) -> None:
+    """Save chunks to disk."""
+    with open(CHUNK_STORE_PATH, "w", encoding="utf-8") as f:
+        json.dump(store, f, ensure_ascii=False)
+
 
 router = APIRouter(prefix="/api/v1/ingestion", tags=["Ingestion"])
 
 
 @router.post("/upload")
 async def upload_document(file: UploadFile = File(...)):
-    """Upload a PDF or text document and store its chunks in memory."""
+    """Upload a PDF or text document and persist its chunks to disk."""
     try:
         suffix = os.path.splitext(file.filename)[-1]
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
@@ -50,12 +69,14 @@ async def upload_document(file: UploadFile = File(...)):
             chunks.append(text[start:end])
             start += chunk_size - overlap
 
-        doc_id = file.filename
-        chunk_store[doc_id] = chunks
+        # Load existing store, add new doc, save back
+        store = load_chunk_store()
+        store[file.filename] = chunks
+        save_chunk_store(store)
 
         return JSONResponse({
             "status": "success",
-            "document_id": doc_id,
+            "document_id": file.filename,
             "chunks": len(chunks),
             "message": f"Document ingested with {len(chunks)} chunks"
         })
@@ -66,11 +87,12 @@ async def upload_document(file: UploadFile = File(...)):
 
 @router.get("/documents")
 async def list_documents():
-    """List all documents currently stored in memory."""
+    """List all documents currently stored on disk."""
     try:
+        store = load_chunk_store()
         documents = [
             {"document_id": doc_id, "chunks": len(chunks)}
-            for doc_id, chunks in chunk_store.items()
+            for doc_id, chunks in store.items()
         ]
         return JSONResponse({"status": "success", "documents": documents})
     except Exception as e:

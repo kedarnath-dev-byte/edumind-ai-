@@ -1,8 +1,9 @@
 """
 @module RagController
 @description FastAPI router for RAG query endpoints.
-             Uses keyword search over in-memory chunks from
-             ingestion_controller to avoid ChromaDB OOM on free tier.
+             Reads chunks from disk-persisted JSON store written by
+             ingestion_controller. Uses keyword search to stay within
+             Render free tier 512MB RAM limit.
              Follows Controller -> Service -> Repository pattern.
 @author      EduMind AI Engineering
 """
@@ -12,8 +13,22 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from groq import Groq
 import os
+import json
 
-from modules.ingestion.ingestion_controller import chunk_store
+# ─── Same path as ingestion_controller ───────────────────────────────────────
+CHUNK_STORE_PATH = "/tmp/edumind_chunks.json"
+
+
+def load_chunk_store() -> dict:
+    """Load chunks from disk. Returns empty dict if file doesn't exist."""
+    try:
+        if os.path.exists(CHUNK_STORE_PATH):
+            with open(CHUNK_STORE_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return {}
+    except Exception:
+        return {}
+
 
 router = APIRouter(prefix="/api/v1/rag", tags=["RAG"])
 
@@ -21,22 +36,22 @@ router = APIRouter(prefix="/api/v1/rag", tags=["RAG"])
 class QueryRequest(BaseModel):
     """Request body for RAG query."""
     question: str
-    document_id: str = None  # Optional: search specific doc only
+    document_id: str = None
 
 
 def keyword_search(question: str, document_id: str = None, top_k: int = 5) -> list:
     """
-    Search chunks using simple keyword matching.
+    Search chunks using keyword matching over disk-persisted store.
     Returns top_k most relevant chunks.
-    No embeddings needed — saves RAM on free tier.
     """
+    store = load_chunk_store()
     question_words = set(question.lower().split())
     scored_chunks = []
 
     docs_to_search = (
-        {document_id: chunk_store[document_id]}
-        if document_id and document_id in chunk_store
-        else chunk_store
+        {document_id: store[document_id]}
+        if document_id and document_id in store
+        else store
     )
 
     for doc_id, chunks in docs_to_search.items():
@@ -54,12 +69,14 @@ def keyword_search(question: str, document_id: str = None, top_k: int = 5) -> li
 async def query_rag(request: QueryRequest):
     """
     Answer a question using RAG:
-    1. Keyword search over in-memory chunks
-    2. Build context from top results
-    3. Send to Groq LLM for final answer
+    1. Load chunks from disk
+    2. Keyword search for relevant chunks
+    3. Send context + question to Groq LLM
     """
     try:
-        if not chunk_store:
+        store = load_chunk_store()
+
+        if not store:
             raise HTTPException(
                 status_code=400,
                 detail="No documents uploaded yet. Please upload a document first."
