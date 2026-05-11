@@ -1,26 +1,29 @@
 /**
  * @file ragService.js
  * @description Service layer for all RAG pipeline API calls.
- *              Connects React frontend to the 16 RAG pipelines
- *              running on the FastAPI backend.
- *              Follows Single Responsibility Principle — only RAG calls here.
+ *              Sends full chat history so AI personalizes responses.
+ *              Follows Single Responsibility Principle.
  */
 import api from './api'
 
-// ─── RAG Service ─────────────────────────────────────────────────────────────
 const ragService = {
 
   /**
-   * Query the RAG pipeline with a question
+   * Query RAG with question + full conversation history
    * @param {string} question - Student's question
-   * @param {string} pipeline - RAG type (naive, hyde, fusion, etc.)
-   * @returns {Promise} - AI generated answer
+   * @param {Array}  history  - Full chat history [{role, content}]
+   * @param {string} documentId - Optional: filter by document
+   * @param {number} userId     - Optional: track per student
+   * @param {number} sessionId  - Optional: group by session
    */
-  async query(question, pipeline = 'naive') {
+  async query(question, history = [], documentId = null, userId = null, sessionId = null) {
     try {
       const response = await api.post('/rag/query', {
         question,
-        pipeline_type: pipeline,
+        history,
+        document_id: documentId,
+        user_id: userId,
+        session_id: sessionId,
       })
       return response.data
     } catch (error) {
@@ -29,28 +32,47 @@ const ragService = {
   },
 
   /**
-   * Get list of all available RAG pipelines
-   * @returns {Promise} - List of 16 RAG pipeline names
+   * Get list of uploaded documents
    */
-  async getPipelines() {
+  async getDocuments(userId = null) {
     try {
-      const response = await api.get('/rag/pipelines')
+      const url = userId
+        ? `/ingestion/documents?user_id=${userId}`
+        : '/ingestion/documents'
+      const response = await api.get(url)
       return response.data
     } catch (error) {
-      throw new Error(error.response?.data?.detail || 'Failed to fetch pipelines')
+      throw new Error(error.response?.data?.detail || 'Failed to fetch documents')
     }
   },
 
   /**
-   * Get RAG query history for current user
-   * @returns {Promise} - List of past queries and answers
+   * Get RAG query history
    */
-  async getHistory() {
+  async getHistory(userId = null) {
     try {
-      const response = await api.get('/rag/history')
+      const url = userId
+        ? `/rag/history?user_id=${userId}`
+        : '/rag/history'
+      const response = await api.get(url)
       return response.data
     } catch (error) {
       throw new Error(error.response?.data?.detail || 'Failed to fetch history')
+    }
+  },
+
+  /**
+   * Get analytics for admin dashboard
+   */
+  async getAnalytics(userId = null) {
+    try {
+      const url = userId
+        ? `/rag/analytics?user_id=${userId}`
+        : '/rag/analytics'
+      const response = await api.get(url)
+      return response.data
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Failed to fetch analytics')
     }
   },
 }

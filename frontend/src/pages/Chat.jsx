@@ -1,24 +1,12 @@
 /**
  * @file Chat.jsx
  * @description AI Tutor chat page for EduMind AI.
- *              Connects to 16 RAG pipelines via ragService.
- *              Students type questions and get AI-powered answers.
- *              Supports switching between all 16 RAG pipeline types.
+ *              Sends full conversation history to backend
+ *              so AI personalizes responses per student.
+ *              Chat history persists in localStorage.
  */
 import { useState, useRef, useEffect } from 'react'
 import ragService from '../services/ragService'
-
-// ─── Available RAG Pipelines ──────────────────────────────────────────────────
-const RAG_PIPELINES = [
-  { value: 'naive',            label: 'Naive RAG' },
-  { value: 'hyde',             label: 'HyDE RAG' },
-  { value: 'fusion',           label: 'Fusion RAG' },
-  { value: 'rerank',           label: 'ReRank RAG' },
-  { value: 'contextual',       label: 'Contextual RAG' },
-  { value: 'speculative',      label: 'Speculative RAG' },
-  { value: 'sentence_window',  label: 'Sentence Window' },
-  { value: 'graph',            label: 'Graph RAG' },
-]
 
 // ─── Single Message Bubble ────────────────────────────────────────────────────
 const MessageBubble = ({ message }) => (
@@ -30,58 +18,92 @@ const MessageBubble = ({ message }) => (
         : 'bg-gray-800 text-gray-100 rounded-bl-sm border border-gray-700'
       }
     `}>
-      {/* Role label */}
-      <p className={`text-xs font-semibold mb-1 
+      <p className={`text-xs font-semibold mb-1
         ${message.role === 'user' ? 'text-blue-200' : 'text-green-400'}`}>
         {message.role === 'user' ? '👤 You' : '🤖 EduMind AI'}
       </p>
-      {/* Message text */}
       <p className="whitespace-pre-wrap">{message.content}</p>
-      {/* Pipeline badge */}
-      {message.pipeline && (
-        <span className="mt-2 inline-block text-xs bg-gray-700
-          text-gray-300 px-2 py-0.5 rounded-full">
-          {message.pipeline}
-        </span>
-      )}
     </div>
   </div>
 )
 
 // ─── Chat Page ────────────────────────────────────────────────────────────────
 const Chat = () => {
-  const [messages, setMessages]         = useState([])
-  const [input, setInput]               = useState('')
-  const [loading, setLoading]           = useState(false)
-  const [selectedPipeline, setPipeline] = useState('naive')
-  const [error, setError]               = useState(null)
-  const bottomRef                       = useRef(null)
+  const [messages, setMessages] = useState(() => {
+    // Load chat history from localStorage on first render
+    try {
+      const saved = localStorage.getItem('edumind_chat_history')
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
+  const [input, setInput]         = useState('')
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState(null)
+  const [documents, setDocuments] = useState([])
+  const [selectedDoc, setSelectedDoc] = useState(null)
+  const bottomRef                 = useRef(null)
+
+  // Save chat history to localStorage whenever messages change
+  useEffect(() => {
+    try {
+      localStorage.setItem('edumind_chat_history', JSON.stringify(messages))
+    } catch {}
+  }, [messages])
 
   // Auto scroll to bottom on new message
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  // Load uploaded documents on mount
+  useEffect(() => {
+    const loadDocs = async () => {
+      try {
+        const result = await ragService.getDocuments()
+        setDocuments(result?.documents || [])
+      } catch {}
+    }
+    loadDocs()
+  }, [])
+
+  // ─── Clear Chat ─────────────────────────────────────────────────────────────
+  const handleClear = () => {
+    setMessages([])
+    localStorage.removeItem('edumind_chat_history')
+  }
+
   // ─── Send Message ───────────────────────────────────────────────────────────
   const handleSend = async () => {
     if (!input.trim() || loading) return
     setError(null)
 
-    // Add user message to chat
     const userMessage = { role: 'user', content: input }
-    setMessages(prev => [...prev, userMessage])
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
     setInput('')
     setLoading(true)
 
     try {
-      // Call RAG pipeline via service
-      const result = await ragService.query(input, selectedPipeline)
+      // Build history in format backend expects
+      const history = updatedMessages.map(m => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: m.content
+      }))
 
-      // Add AI response to chat
+      // Call RAG with full history
+      const result = await ragService.query(
+        input,
+        history,
+        selectedDoc,
+        null,  // user_id — will add after auth
+        null   // session_id
+      )
+
       const aiMessage = {
         role: 'assistant',
-        content: result.answer || result.response || JSON.stringify(result),
-        pipeline: selectedPipeline,
+        content: result.answer || 'Sorry, I could not generate an answer.',
       }
       setMessages(prev => [...prev, aiMessage])
     } catch (err) {
@@ -91,7 +113,6 @@ const Chat = () => {
     }
   }
 
-  // Send on Enter key
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -107,49 +128,58 @@ const Chat = () => {
         <div>
           <h1 className="text-2xl font-bold text-white">🤖 AI Tutor</h1>
           <p className="text-gray-400 text-sm">
-            Powered by 16 RAG pipelines + Groq Llama-3
+            Remembers your full conversation • Powered by Groq Llama-3
           </p>
         </div>
-
-        {/* Pipeline Selector */}
-        <select
-          value={selectedPipeline}
-          onChange={(e) => setPipeline(e.target.value)}
-          className="bg-gray-800 border border-gray-700 text-white
-            text-sm rounded-lg px-3 py-2 focus:outline-none
-            focus:border-blue-500"
-        >
-          {RAG_PIPELINES.map(p => (
-            <option key={p.value} value={p.value}>{p.label}</option>
-          ))}
-        </select>
+        <div className="flex gap-2">
+          {/* Document selector */}
+          <select
+            value={selectedDoc || ''}
+            onChange={(e) => setSelectedDoc(e.target.value || null)}
+            className="bg-gray-800 border border-gray-700 text-white
+              text-sm rounded-lg px-3 py-2 focus:outline-none
+              focus:border-blue-500"
+          >
+            <option value="">All Documents</option>
+            {documents.map(doc => (
+              <option key={doc.document_id} value={doc.document_id}>
+                {doc.document_id}
+              </option>
+            ))}
+          </select>
+          {/* Clear history button */}
+          <button
+            onClick={handleClear}
+            className="bg-gray-700 hover:bg-gray-600 text-gray-300
+              text-sm px-3 py-2 rounded-lg transition-colors"
+          >
+            Clear
+          </button>
+        </div>
       </div>
 
       {/* ── Chat Messages ── */}
       <div className="flex-1 overflow-y-auto bg-gray-900 rounded-xl
-        border border-gray-800 p-4 mb-4">
+        border border-gray-800 p-4 mb-4 min-h-96">
 
-        {/* Empty state */}
         {messages.length === 0 && (
           <div className="h-full flex flex-col items-center
-            justify-center text-center">
+            justify-center text-center py-20">
             <span className="text-6xl mb-4">🧠</span>
             <h3 className="text-white font-semibold text-lg">
               Ask me anything!
             </h3>
             <p className="text-gray-400 text-sm mt-2 max-w-md">
-              I'm powered by {selectedPipeline} RAG pipeline.
-              Upload your study materials and ask questions about them.
+              Upload your study materials and ask questions.
+              I remember our full conversation to guide you personally.
             </p>
           </div>
         )}
 
-        {/* Messages */}
         {messages.map((msg, idx) => (
           <MessageBubble key={idx} message={msg} />
         ))}
 
-        {/* Loading indicator */}
         {loading && (
           <div className="flex justify-start mb-4">
             <div className="bg-gray-800 border border-gray-700
@@ -166,7 +196,6 @@ const Chat = () => {
           </div>
         )}
 
-        {/* Error message */}
         {error && (
           <div className="bg-red-500/10 border border-red-500/30
             text-red-400 text-sm px-4 py-3 rounded-lg mb-4">
