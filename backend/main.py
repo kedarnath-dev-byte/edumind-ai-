@@ -39,8 +39,8 @@ app.add_middleware(TimingMiddleware)
 # ─── Routers ──────────────────────────────────────────────────────────────────
 app.include_router(evaluation_router)
 app.include_router(health_router, prefix="/api/v1", tags=["Health"])
-app.include_router(ingestion_router, prefix="/api/v1", tags=["Ingestion"])
-app.include_router(rag_router, prefix="/api/v1", tags=["RAG"])
+app.include_router(ingestion_router)
+app.include_router(rag_router)
 # ─── Startup Event ────────────────────────────────────────────────────────────
 @app.on_event("startup")
 async def on_startup():
